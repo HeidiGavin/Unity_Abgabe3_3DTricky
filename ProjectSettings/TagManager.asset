@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Diamond
   - Obstacle
+  - WinFlag
   layers:
   - Default
   - TransparentFX

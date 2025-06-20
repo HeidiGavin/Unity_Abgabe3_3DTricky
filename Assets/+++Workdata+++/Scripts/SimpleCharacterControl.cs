@@ -2,6 +2,7 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class SimpleCharacterControl : MonoBehaviour
 {
@@ -20,13 +21,15 @@ public class SimpleCharacterControl : MonoBehaviour
     
     [SerializeField] private Diamondmanager diamondManager;
     [SerializeField] private UIManager uiManager;
-
+    [SerializeField] private TimerScript timerScript;
+    
     private bool canMove = true;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        canMove = false;
     }
 
     void Update()
@@ -59,6 +62,11 @@ public class SimpleCharacterControl : MonoBehaviour
 
             animator.SetFloat("Speed", Mathf.Abs(_direction));
         }
+        else
+        {
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+            animator.SetFloat("Speed", 0);
+        }
     }
     //Flip Sprite while moving Code
     void FlipSprite()
@@ -79,6 +87,7 @@ public class SimpleCharacterControl : MonoBehaviour
         if (Physics2D.OverlapCircle(transformCheckGround.position, 0.1f, layerGround))
             rb.linearVelocity = new Vector2(0, jumpForce);
     }
+    
     //ifCollision Manager
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -97,6 +106,21 @@ public class SimpleCharacterControl : MonoBehaviour
             uiManager.ShowPanelLost();
             rb.linearVelocity = Vector2.zero;
             canMove = false;
+            timerScript.StopTimer();
         }
+        
+        else if (other.CompareTag("WinFlag"))
+        {
+            Debug.Log("You win!");
+            uiManager.ShowPanelWin();
+            rb.linearVelocity = Vector2.zero;
+            canMove = false;
+            timerScript.StopTimer();
+        }
+    }
+
+    public void SetCanMove(bool value)
+    {
+        canMove = value;
     }
 }

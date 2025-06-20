@@ -4,6 +4,8 @@ public class Diamondmanager : MonoBehaviour
 {
     public static Diamondmanager instance;
     public int diamonds = 0;
+    
+    [SerializeField]
 
     void Awake()
     {
