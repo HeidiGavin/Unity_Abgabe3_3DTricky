@@ -8,9 +8,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI textCounterDiamond;
     [SerializeField] private GameObject panelLost;
     [SerializeField] private GameObject panelWin;
-    [SerializeField] private Button buttonRestartButton;
-    [SerializeField] private Button buttonMainMenuButton;
-    [SerializeField] private Button buttonNextLevelButton;
     
     private void Start()
     { 

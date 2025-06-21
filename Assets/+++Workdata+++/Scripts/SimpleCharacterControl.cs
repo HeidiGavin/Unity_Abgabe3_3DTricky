@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -112,10 +113,11 @@ public class SimpleCharacterControl : MonoBehaviour
         else if (other.CompareTag("WinFlag"))
         {
             Debug.Log("You win!");
-            uiManager.ShowPanelWin();
             rb.linearVelocity = Vector2.zero;
             canMove = false;
             timerScript.StopTimer();
+            //add animation later
+            StartCoroutine(WinDelay(5));
         }
     }
 
@@ -123,4 +125,11 @@ public class SimpleCharacterControl : MonoBehaviour
     {
         canMove = value;
     }
+
+    private IEnumerator WinDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        uiManager.ShowPanelWin();
+    }
+    
 }
