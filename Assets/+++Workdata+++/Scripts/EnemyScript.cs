@@ -2,42 +2,47 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
-    public Transform patrolPoint_1;
-    public Transform patrolPoint_2;
+    public Transform [] patrolPoints;
     public float speed = 2;
-    private Vector3 target;
+    public int patrolDestination;
     private bool isDead = false;
 
     private Rigidbody2D rb;
-    private Animator animator;
+    private Animator _animator;
     [SerializeField] private UIManager uiManager;
         
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
-        target = patrolPoint_2.position;
+       rb = GetComponent<Rigidbody2D>();
+       _animator = GetComponent<Animator>();
     }
     
     void Update()
     {
         if (isDead) return;
-        
-        transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
-        
-        if (Vector2.Distance(transform.position, target) < 0.1f)
-        {
-            target = (target == patrolPoint_1.position) ? patrolPoint_2.position : patrolPoint_1.position;
-            Flip();
-        }
-    }//U SUCK THIS DOESNT WORK >:(
 
-    void Flip()
-    {
-        Vector3 scale = transform.localScale;
-        scale.x *= -1;
-        transform.localScale = scale;
+        if (patrolDestination == 0)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, patrolPoints[0].position, speed * Time.deltaTime);
+            if (Vector2.Distance(transform.position, patrolPoints[0].position) < .2f)
+            {
+                transform.localScale = new Vector3(1, 1, 1);
+                patrolDestination = 1;
+            }
+        }
+        
+        if (patrolDestination == 1)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, patrolPoints[1].position, speed * Time.deltaTime);
+            if (Vector2.Distance(transform.position, patrolPoints[1].position) < .2f)
+            {
+                transform.localScale = new Vector3(-1, 1, 1);
+                patrolDestination = 0;
+            }
+        }
+        
     }
+    
 
     private void OnCollisionEnter2D(Collision2D other)
     {

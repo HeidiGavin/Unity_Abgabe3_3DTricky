@@ -1,9 +1,10 @@
 using UnityEngine;
 
-public class Diamondmanager : MonoBehaviour
+public class Collecatblesmanager : MonoBehaviour
 {
-    public static Diamondmanager instance;
+    public static Collecatblesmanager instance;
     public int diamonds = 0;
+    public int coins = 0;
     
     [SerializeField]
 
@@ -17,5 +18,10 @@ public class Diamondmanager : MonoBehaviour
     {
         diamonds += amount;
         Debug.Log("Diamonds: " + diamonds);
+    } 
+    public void AddCoins(int amount)
+    {
+        coins += amount;
+        Debug.Log("Coins: " + coins);
     }
 }

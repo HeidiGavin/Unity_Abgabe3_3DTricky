@@ -20,7 +20,7 @@ public class SimpleCharacterControl : MonoBehaviour
     [SerializeField] private Transform transformCheckGround;
     [SerializeField] private LayerMask layerGround;
     
-    [SerializeField] private Diamondmanager diamondManager;
+    [SerializeField] private Collecatblesmanager collectableManager;
     [SerializeField] private UIManager uiManager;
     [SerializeField] private TimerScript timerScript;
     
@@ -94,11 +94,18 @@ public class SimpleCharacterControl : MonoBehaviour
     {
         Debug.Log("collision!");
 
-        if (other.CompareTag("Diamond"))
+        if (other.CompareTag("Coin"))
+        {
+            Debug.Log("Its a Coin");
+            Destroy(other.gameObject);
+            collectableManager.AddCoins(1);
+        }
+        
+        else if (other.CompareTag("Diamond"))
         {
             Debug.Log("Its a Diamond");
             Destroy(other.gameObject);
-            diamondManager.AddDiamonds(1);
+            collectableManager.AddDiamonds(1);
         }
 
         else if (other.CompareTag("Obstacle"))
@@ -129,7 +136,11 @@ public class SimpleCharacterControl : MonoBehaviour
     private IEnumerator WinDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        uiManager.ShowPanelWin();
+        
+        int coinCount = collectableManager.coins;
+        int diamondCount = collectableManager.diamonds;
+        float timeTaken = timerScript.GetTimer();
+        
+        uiManager.ShowPanelWinScore(coinCount, diamondCount, timeTaken);
     }
-    
 }

@@ -5,9 +5,10 @@ using UnityEngine.UIElements;
 
 public class UIManager : MonoBehaviour
 { 
-    [SerializeField] private TextMeshProUGUI textCounterDiamond;
+    [SerializeField] private TextMeshProUGUI textCounterCoins;
     [SerializeField] private GameObject panelLost;
     [SerializeField] private GameObject panelWin;
+    [SerializeField] private TextMeshProUGUI finalScoreText;
     
     private void Start()
     { 
@@ -30,9 +31,9 @@ public class UIManager : MonoBehaviour
       //  SceneManager.LoadScene("JumpNRub_Level2");
     }
 
-    public void UpdateDiamondCount(int newDiamondCount)
+    public void UpdateCoinCount(int newCoinCount)
     {
-        textCounterDiamond.text = newDiamondCount.ToString();
+        textCounterCoins.text = newCoinCount.ToString(); 
     }
 
     public void ShowPanelLost()
@@ -40,9 +41,12 @@ public class UIManager : MonoBehaviour
         panelLost.SetActive(true);
     }
 
-    public void ShowPanelWin()
+    public void ShowPanelWinScore(int coins, int diamonds, float time)
     {
         panelWin.SetActive(true);
+        int finalScore = coins * 10 + diamonds * 25 - Mathf.RoundToInt(time);
+        if (finalScore < 0) finalScore = 0;
+        finalScoreText.text = "You Scored: " + finalScore;
     }
     
 }

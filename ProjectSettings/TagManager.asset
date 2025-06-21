@@ -7,6 +7,7 @@ TagManager:
   - Diamond
   - Obstacle
   - WinFlag
+  - Coin
   layers:
   - Default
   - TransparentFX

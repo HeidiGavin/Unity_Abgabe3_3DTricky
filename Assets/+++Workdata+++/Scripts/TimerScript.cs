@@ -73,4 +73,9 @@ public class TimerScript : MonoBehaviour
     {
         return isRunning;
     }
+
+    public float GetTimer()
+    {
+        return timer;
+    }
 }
