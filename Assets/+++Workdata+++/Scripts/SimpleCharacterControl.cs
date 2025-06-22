@@ -7,108 +7,111 @@ using UnityEngine.Rendering;
 
 public class SimpleCharacterControl : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 10f;
-    [SerializeField] private float jumpForce = 5f;
-    private float _direction = 0f;
+    [SerializeField] private float moveSpeed = 10f; // movement speed of the character
+    [SerializeField] private float jumpForce = 5f; // force applied for jumping
+    private float _direction = 0f; // direction of movement (-1 left, 1 righht)
 
-    public Animator animator;
-    private float horizontal;
-    private bool _isFacingRight = true;
+    public Animator animator; // reference to Animator for controlling animations
+    private float horizontal; // horizontal input
+    private bool _isFacingRight = true; // tracks direction character is facing
 
-    private Rigidbody2D rb;
+    private Rigidbody2D rb; // Rigidbody2D component reference for physics
     
-    [SerializeField] private Transform transformCheckGround;
-    [SerializeField] private LayerMask layerGround;
+    //For Ground Check and Jump
+    [SerializeField] private Transform transformCheckGround; // point to check if grounded
+    [SerializeField] private LayerMask layerGround; // Ground layer reference
     
-    [SerializeField] private Collecatblesmanager collectableManager;
-    [SerializeField] private UIManager uiManager;
-    [SerializeField] private TimerScript timerScript;
+    //For In-Game UI and Tags
+    [SerializeField] private Collecatblesmanager collectableManager; // Collectibles manager reference
+    [SerializeField] private UIManager uiManager; // UI manager reference
+    [SerializeField] private TimerScript timerScript; // Timer script reference
     
-    private bool canMove = true;
+    private bool canMove = true; // control whether character can move
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        canMove = false;
+        canMove = false; // disable movement at start
     }
 
     void Update()
     {
-        FlipSprite();
+        FlipSprite(); // sprite flipping
         
+        // check is character is grounded
         bool isGrounded =Physics2D.OverlapCircle(transformCheckGround.position, 0.1f, layerGround);
-        animator.SetBool("isGrounded", isGrounded);
+        animator.SetBool("isGrounded", isGrounded); // update animator state
         
-        //Basic Character Movement Code
-        if (canMove)
+        //Basic Character Movement
+        if (canMove) // if character is allowed to move
         {
-            _direction = 0f;
-            if (Keyboard.current.aKey.isPressed)
+            _direction = 0f; // reset direction
+            if (Keyboard.current.aKey.isPressed) // move left with A
             {
                 _direction = -1f;
             }
 
-            if (Keyboard.current.dKey.isPressed)
+            if (Keyboard.current.dKey.isPressed) // move right with D
             {
                 _direction = 1;
             }
 
-            if (Keyboard.current.spaceKey.wasPressedThisFrame)
+            if (Keyboard.current.spaceKey.wasPressedThisFrame) // jump on space press
             {
                 Jump();
             }
             
-            rb.linearVelocity = new Vector2(_direction * moveSpeed, rb.linearVelocity.y);
-
-            animator.SetFloat("Speed", Mathf.Abs(_direction));
+            rb.linearVelocity = new Vector2(_direction * moveSpeed, rb.linearVelocity.y); // apply horizontal velocity
+            animator.SetFloat("Speed", Mathf.Abs(_direction)); // update speed animator
         }
         else
         {
-            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
-            animator.SetFloat("Speed", 0);
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y); // stop horizontal movement
+            animator.SetFloat("Speed", 0); // stop movement animation
         }
     }
-    //Flip Sprite while moving Code
+    //Flip Sprite based on movement direction
     void FlipSprite()
     {
         if (_direction > 0 && !_isFacingRight || _direction < 0 && _isFacingRight)
         {
-            _isFacingRight = !_isFacingRight;
-            Vector3 localScale = transform.localScale;
-            localScale.x *= -1f;
-            transform.localScale = localScale;
+            _isFacingRight = !_isFacingRight; // invert facing direction
+            Vector3 localScale = transform.localScale; // get local scale 
+            localScale.x *= -1f; // flip horizontally
+            transform.localScale = localScale; // apply new scale
         }
     }
-    //Jump Force
+    //Jump Logic
     void Jump()
     {
-       animator.SetTrigger("Jump");
+       animator.SetTrigger("Jump"); // trigger jump animation
         
+       // apply vertical force if grounded
         if (Physics2D.OverlapCircle(transformCheckGround.position, 0.1f, layerGround))
             rb.linearVelocity = new Vector2(0, jumpForce);
     }
     
-    //ifCollision Manager
+    // Collision Tag Manager (collision detection with triggers)
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("collision!");
+        Debug.Log("collision!"); 
 
-        if (other.CompareTag("Coin"))
+        if (other.CompareTag("Coin")) // coin pickup
         {
             Debug.Log("Its a Coin");
             Destroy(other.gameObject);
             collectableManager.AddCoins(10);
         }
         
-        else if (other.CompareTag("Diamond"))
+        else if (other.CompareTag("Diamond")) // diamond pickup
         {
             Debug.Log("Its a Diamond");
             Destroy(other.gameObject);
             collectableManager.AddCoins(20);
         }
 
-        else if (other.CompareTag("Obstacle"))
+        else if (other.CompareTag("Obstacle")) // obstacle hit
         {
             Debug.Log("you touched the obstacle");
             uiManager.ShowPanelLost();
@@ -117,7 +120,7 @@ public class SimpleCharacterControl : MonoBehaviour
             timerScript.StopTimer();
         }
         
-        else if (other.CompareTag("WinFlag"))
+        else if (other.CompareTag("WinFlag")) // win condition
         {
             Debug.Log("You win!");
             rb.linearVelocity = Vector2.zero;
@@ -127,12 +130,14 @@ public class SimpleCharacterControl : MonoBehaviour
             StartCoroutine(WinDelay(3));
         }
     }
-
+    
+    // CanMove Bool (public method to enable/disable movement)
     public void SetCanMove(bool value)
     {
         canMove = value;
     }
 
+    // Coroutine to delay win panel
     private IEnumerator WinDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
