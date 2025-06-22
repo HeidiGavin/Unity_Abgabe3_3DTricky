@@ -27,12 +27,15 @@ public class SimpleCharacterControl : MonoBehaviour
     [SerializeField] private TimerScript timerScript; // Timer script reference
     
     private bool canMove = true; // control whether character can move
+    
+    private AudioManager audioManager; // Audio Manager reference
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         canMove = false; // disable movement at start
+        audioManager = FindObjectOfType<AudioManager>();
     }
 
     void Update()
@@ -88,8 +91,12 @@ public class SimpleCharacterControl : MonoBehaviour
        animator.SetTrigger("Jump"); // trigger jump animation
         
        // apply vertical force if grounded
-        if (Physics2D.OverlapCircle(transformCheckGround.position, 0.1f, layerGround))
-            rb.linearVelocity = new Vector2(0, jumpForce);
+       if (Physics2D.OverlapCircle(transformCheckGround.position, 0.1f, layerGround))
+       {
+           rb.linearVelocity = new Vector2(0, jumpForce);
+           audioManager?.PlayJumpSound();
+       }
+
     }
     
     // Collision Tag Manager (collision detection with triggers)
@@ -102,6 +109,8 @@ public class SimpleCharacterControl : MonoBehaviour
             Debug.Log("Its a Coin");
             Destroy(other.gameObject);
             collectableManager.AddCoins(10);
+            audioManager?.PlayCoinSound();
+            
         }
         
         else if (other.CompareTag("Diamond")) // diamond pickup
@@ -109,6 +118,7 @@ public class SimpleCharacterControl : MonoBehaviour
             Debug.Log("Its a Diamond");
             Destroy(other.gameObject);
             collectableManager.AddCoins(20);
+            audioManager?.PlayCoinSound();
         }
 
         else if (other.CompareTag("Obstacle")) // obstacle hit
