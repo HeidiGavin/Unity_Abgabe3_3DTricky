@@ -17,7 +17,11 @@ public class EnemyKill : MonoBehaviour
         {
             if (collecatblesManager != null)
             {
-                collecatblesManager.AddCoins(20);
+                collecatblesManager.AddCoins(15);
+            }
+            else
+            {
+                Debug.LogWarning("CollectablesManager is null on enemy kill");
             }
             Destroy(enemy);
         }

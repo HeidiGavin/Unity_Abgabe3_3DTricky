@@ -98,14 +98,14 @@ public class SimpleCharacterControl : MonoBehaviour
         {
             Debug.Log("Its a Coin");
             Destroy(other.gameObject);
-            collectableManager.AddCoins(1);
+            collectableManager.AddCoins(10);
         }
         
         else if (other.CompareTag("Diamond"))
         {
             Debug.Log("Its a Diamond");
             Destroy(other.gameObject);
-            collectableManager.AddDiamonds(1);
+            collectableManager.AddCoins(20);
         }
 
         else if (other.CompareTag("Obstacle"))
@@ -124,7 +124,7 @@ public class SimpleCharacterControl : MonoBehaviour
             canMove = false;
             timerScript.StopTimer();
             //add animation later
-            StartCoroutine(WinDelay(5));
+            StartCoroutine(WinDelay(3));
         }
     }
 
