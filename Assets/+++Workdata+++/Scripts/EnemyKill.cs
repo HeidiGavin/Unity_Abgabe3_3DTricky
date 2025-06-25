@@ -15,15 +15,11 @@ public class EnemyKill : MonoBehaviour
         
         if (other.gameObject.CompareTag("Player"))
         {
-            if (collecatblesManager != null)
+            if (other.CompareTag("Player"))
             {
-                collecatblesManager.AddCoins(15);
+                collecatblesManager.AddEnemyBonus(200);
+                Destroy(enemy);
             }
-            else
-            {
-                Debug.LogWarning("CollectablesManager is null on enemy kill");
-            }
-            Destroy(enemy);
         }
     }
 }

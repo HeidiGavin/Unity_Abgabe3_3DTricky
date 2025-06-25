@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 public class UIManager : MonoBehaviour
 { 
     [SerializeField] private TextMeshProUGUI textCounterCoins;
+    [SerializeField] private TextMeshProUGUI textCounterDiamonds;
     [SerializeField] private GameObject panelLost;
     [SerializeField] private GameObject panelWin;
     [SerializeField] private TextMeshProUGUI finalScoreText;
@@ -48,7 +49,12 @@ public class UIManager : MonoBehaviour
 
     public void UpdateCoinCount(int newCoinCount)
     {
-        textCounterCoins.text = newCoinCount.ToString(); 
+        textCounterCoins.text = newCoinCount.ToString();
+    }
+
+    public void UpdateDiamondCount(int newDiamondCount)
+    {
+        textCounterDiamonds.text = newDiamondCount.ToString();
     }
 
     public void UpdateCurrentScore(int score)
@@ -83,10 +89,10 @@ public class UIManager : MonoBehaviour
         panelLost.SetActive(true);
     }
 
-    public void ShowPanelWinScore(int coins, int diamonds, float time)
+    public void ShowPanelWinScore(int coins, int diamonds, int bonusPoints, float time)
     {
         panelWin.SetActive(true);
-        int finalScore = coins * 10 + diamonds * 20 - Mathf.RoundToInt(time);
+        int finalScore = coins * 100 + diamonds * 200 + bonusPoints - Mathf.RoundToInt(time * 5);
         if (finalScore < 0) finalScore = 0;
 
         if (finalScore > highScore)
@@ -95,7 +101,7 @@ public class UIManager : MonoBehaviour
             PlayerPrefs.SetInt("HighScore", highScore);
         }
         
-        finalScoreText.text = "You Scored: " + finalScore;
+        finalScoreText.text = "You Scored " + finalScore;
         UpdateHighScoreText();
     }
     

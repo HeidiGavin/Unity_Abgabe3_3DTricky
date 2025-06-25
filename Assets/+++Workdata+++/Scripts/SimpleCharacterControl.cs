@@ -108,7 +108,7 @@ public class SimpleCharacterControl : MonoBehaviour
         {
             Debug.Log("Its a Coin");
             Destroy(other.gameObject);
-            collectableManager.AddCoins(10);
+            collectableManager.AddCoins(1);
             audioManager?.PlayCoinSound();
             
         }
@@ -117,7 +117,7 @@ public class SimpleCharacterControl : MonoBehaviour
         {
             Debug.Log("Its a Diamond");
             Destroy(other.gameObject);
-            collectableManager.AddCoins(20);
+            collectableManager.AddDiamonds(1);
             audioManager?.PlayCoinSound();
         }
 
@@ -154,8 +154,9 @@ public class SimpleCharacterControl : MonoBehaviour
         
         int coinCount = collectableManager.coins;
         int diamondCount = collectableManager.diamonds;
+        int bonusPoints = collectableManager.enemyBonus;
         float timeTaken = timerScript.GetTimer();
         
-        uiManager.ShowPanelWinScore(coinCount, diamondCount, timeTaken);
+        uiManager.ShowPanelWinScore(coinCount, diamondCount, bonusPoints, timeTaken);
     }
 }
